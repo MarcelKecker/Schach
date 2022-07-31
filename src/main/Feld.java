@@ -1,15 +1,14 @@
 package main;
 
-import enums.FigurEnum;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
+import java.util.ArrayList;
 
-public class Feld extends JButton {
+public class Feld extends JButton{
 
     private Position position;
     private Spielfeld spielfeld;
+    private boolean istZielPosition;
 
     private Figur figurAufDiesemFeld;
 
@@ -17,15 +16,27 @@ public class Feld extends JButton {
         this.position = position;
         this.spielfeld = spielfeld;
         this.setPreferredSize(new Dimension(100, 100));
-        if ((position.getX() % 2 == 0 && position.getY() % 2 == 0) || (position.getX() % 2 == 1 && position.getY() % 2 == 1)) {
-            setBackground(Color.WHITE);
-        } else {
-            setBackground(Color.GREEN.darker().darker().darker());
-        }
         updateGraphics();
     }
 
+    private boolean istWeissesFeld() {
+        return (position.getX() % 2 == 0 && position.getY() % 2 == 0) || (position.getX() % 2 == 1 && position.getY() % 2 == 1);
+    }
+
     private void updateGraphics() {
+        if (istZielPosition) {
+            if (istWeissesFeld()) {
+                setBackground(Color.RED.brighter());
+            } else {
+                setBackground(Color.RED.darker());
+            }
+        } else {
+            if (istWeissesFeld()) {
+                setBackground(Color.WHITE);
+            } else {
+                setBackground(Color.GREEN.darker().darker().darker());
+            }
+        }
         if (this.figurAufDiesemFeld != null) {
             setIcon(this.figurAufDiesemFeld.getIcon());
         } else {
@@ -35,6 +46,17 @@ public class Feld extends JButton {
 
     public void setFigurAufDiesemFeld(Figur figurAufDiesemFeld) {
         this.figurAufDiesemFeld = figurAufDiesemFeld;
+        updateGraphics();
+    }
+    public ArrayList<Position> getMoeglicheZielPositionen() {
+        return figurAufDiesemFeld.getMoeglicheZielPositionen(spielfeld, position);
+    }
+    public boolean istFigurAufDiesemFeld() {
+        return figurAufDiesemFeld != null;
+    }
+
+    public void setIstZielPosition(boolean istZielPosition) {
+        this.istZielPosition = istZielPosition;
         updateGraphics();
     }
 }

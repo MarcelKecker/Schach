@@ -3,6 +3,7 @@ package main;
 import enums.Farbe;
 
 import javax.swing.ImageIcon;
+import java.util.ArrayList;
 
 public abstract class Figur {
 
@@ -15,4 +16,5 @@ public abstract class Figur {
     public ImageIcon getIcon() {
         return icon;
     }
+    public abstract ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position);
 }
