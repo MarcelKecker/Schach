@@ -59,4 +59,8 @@ public class Feld extends JButton{
         this.istZielPosition = istZielPosition;
         updateGraphics();
     }
+
+    public boolean istZielPosition() {
+        return istZielPosition;
+    }
 }

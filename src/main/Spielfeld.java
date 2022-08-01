@@ -32,6 +32,15 @@ public class Spielfeld extends JPanel implements ActionListener {
         }
     }
 
+    private boolean istFigurAusgewaehlt() {
+        for (Feld feld : felder) {
+            if (feld.istZielPosition()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Position position(int feld) {
         return new Position(feld % SPIELFELD_BREITE, feld / SPIELFELD_BREITE);
     }
@@ -45,9 +54,14 @@ public class Spielfeld extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Feld feld = (Feld) e.getSource();
-        if (feld.istFigurAufDiesemFeld()) {
-            ArrayList<Position> moeglicheZielPositionen = feld.getMoeglicheZielPositionen();
+        Feld ausgewaeltesFeld = (Feld) e.getSource();
+
+        if (istFigurAusgewaehlt() && !ausgewaeltesFeld.istZielPosition()) {
+            for (Feld feld : felder) {
+                feld.setIstZielPosition(false);
+            }
+        } else if (ausgewaeltesFeld.istFigurAufDiesemFeld()) {
+            ArrayList<Position> moeglicheZielPositionen = ausgewaeltesFeld.getMoeglicheZielPositionen();
             for (Position position : moeglicheZielPositionen) {
                 Feld zielFeld = felder[feld(position)];
                 zielFeld.setIstZielPosition(true);
