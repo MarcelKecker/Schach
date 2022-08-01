@@ -12,15 +12,17 @@ import java.util.ArrayList;
 public class Spielfeld extends JPanel implements ActionListener {
     private static final int SPIELFELD_BREITE = 8;
     private static final int SPIELFELD_HOEHE = 8;
+    private Position positionAusgewaehlteFigur;
 
-    Feld[] felder;
+    private Feld[] felder;
 
     public Spielfeld() {
         this.setLayout(new GridLayout(SPIELFELD_HOEHE, SPIELFELD_BREITE));
         erstelleFelder();
-
-        Bauer bauer = new Bauer(Farbe.WEISS);
-        felder[SPIELFELD_BREITE].setFigurAufDiesemFeld(bauer);
+        for (int i = 0; i < SPIELFELD_BREITE; i++) {
+            felder[feld(i, 6)].setFigurAufDiesemFeld(new Bauer(Farbe.WEISS));
+            felder[feld(i, 1)].setFigurAufDiesemFeld(new Bauer(Farbe.SCHWARZ));
+        }
     }
 
     private void erstelleFelder() {
@@ -52,20 +54,44 @@ public class Spielfeld extends JPanel implements ActionListener {
         return y * SPIELFELD_BREITE + x;
     }
 
+    public boolean istImSpielfeld(Position position) {
+        return position.getX() < SPIELFELD_BREITE && position.getX() >= 0 && position.getY() < SPIELFELD_HOEHE && position.getY() >= 0;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        Feld ausgewaeltesFeld = (Feld) e.getSource();
+        //TODO nur abwechselnd ziehen
+        Feld ausgewaehltesFeld = (Feld) e.getSource();
 
-        if (istFigurAusgewaehlt() && !ausgewaeltesFeld.istZielPosition()) {
+        if (istFigurAusgewaehlt()) {
+            if (ausgewaehltesFeld.istZielPosition()) {
+                bewegeFigur(ausgewaehltesFeld.getPosition());
+            }
             for (Feld feld : felder) {
                 feld.setIstZielPosition(false);
             }
-        } else if (ausgewaeltesFeld.istFigurAufDiesemFeld()) {
-            ArrayList<Position> moeglicheZielPositionen = ausgewaeltesFeld.getMoeglicheZielPositionen();
+            positionAusgewaehlteFigur = null;
+        } else if (ausgewaehltesFeld.istFigurAufDiesemFeld()) {
+            ArrayList<Position> moeglicheZielPositionen = ausgewaehltesFeld.getMoeglicheZielPositionen();
             for (Position position : moeglicheZielPositionen) {
-                Feld zielFeld = felder[feld(position)];
+                Feld zielFeld = getFeldBei(position);
                 zielFeld.setIstZielPosition(true);
             }
+            positionAusgewaehlteFigur = ausgewaehltesFeld.getPosition();
         }
+    }
+
+    private void bewegeFigur(Position ziel) {
+        Feld ausgewaehltesFeld = getFeldBei(positionAusgewaehlteFigur);
+        getFeldBei(ziel).setFigurAufDiesemFeld(ausgewaehltesFeld.getFigurAufDiesemFeld());
+        ausgewaehltesFeld.setFigurAufDiesemFeld(null);
+    }
+
+    public Feld getFeldBei(Position ziel) {
+        return felder[feld(ziel)];
+    }
+
+    public Figur getFigurBei(Position ziel) {
+        return getFeldBei(ziel).getFigurAufDiesemFeld();
     }
 }

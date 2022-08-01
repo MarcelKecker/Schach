@@ -17,6 +17,10 @@ public class Position {
         return y;
     }
 
+    public Position verschobenUm(int xDiff, int yDiff) {
+        return new Position(x + xDiff, y + yDiff);
+    }
+
     @Override
     public boolean equals(Object vergleich) {
 

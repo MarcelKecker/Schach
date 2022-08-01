@@ -63,4 +63,12 @@ public class Feld extends JButton{
     public boolean istZielPosition() {
         return istZielPosition;
     }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public Figur getFigurAufDiesemFeld() {
+        return figurAufDiesemFeld;
+    }
 }
