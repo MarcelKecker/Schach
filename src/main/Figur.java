@@ -23,9 +23,6 @@ public abstract class Figur{
     public Farbe getFarbe() {
         return farbe;
     }
-    public boolean istGleich(Object obj) {
-        Figur figur = (Figur) obj;
-        return (this.getIcon() == figur.getIcon());
-    }
     public abstract boolean kontrolliertFeld(Position position, Position vergleich);
+    public abstract boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld);
 }

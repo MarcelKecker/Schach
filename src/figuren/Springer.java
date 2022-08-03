@@ -54,8 +54,12 @@ public class Springer extends Figur {
                 || position.verschobenUm(-1, -2).equals(vergleich);
     }
 
+    @Override
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+        return false;
+    }
+
     private void probiereBewegen(Spielfeld spielfeld, ArrayList<Position> positionen, Position ziel) {
-        System.out.println(spielfeld.feldKontrolliert(this, ziel));
         if (spielfeld.istImSpielfeld(ziel)) {
             if (spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() == farbe) {
                 return;

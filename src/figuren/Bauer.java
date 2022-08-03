@@ -56,6 +56,11 @@ public class Bauer extends Figur {
         return (farbe == Farbe.WEISS && (position.verschobenUm(-1, 1).equals(vergleich) || position.verschobenUm(1, 1).equals(vergleich))) || (farbe == Farbe.SCHWARZ && (position.verschobenUm(-1, -1).equals(vergleich) || position.verschobenUm(1, -1).equals(vergleich)));
     }
 
+    @Override
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+        return false;
+    }
+
     private void probiereSchlagen(Spielfeld spielfeld, ArrayList<Position> positionen, Position ziel) {
         if (spielfeld.istImSpielfeld(ziel) && spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() != farbe) {
             positionen.add(ziel);

@@ -27,23 +27,7 @@ public class Koenig extends Figur {
 
     @Override
     public ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position) {
-//        int richtung = switch (farbe) {
-//            case WEISS -> -1;
-//            case SCHWARZ -> 1;
-//        };
-//        Position einsEntfernt = position.verschobenUm(0, richtung);
-//        Position zweiEntfernt = position.verschobenUm(0, richtung * 2);
-//        if (spielfeld.getFigurBei(einsEntfernt) == null) {
-//            positionen.add(einsEntfernt);
-//            if (position.getY() == startPosition && spielfeld.getFigurBei(zweiEntfernt) == null) {
-//                positionen.add(zweiEntfernt);
-//            }
-//        }
-//        probiereSchlagen(spielfeld, positionen, position.verschobenUm(-1, richtung));
-//        probiereSchlagen(spielfeld, positionen, position.verschobenUm(1, richtung));
-
         ArrayList<Position> positionen = new ArrayList<>();
-        // TODO richtige Positionen zurückgeben
 
         probiereBewegen(spielfeld, positionen, position.verschobenUm(1, 1));
         probiereBewegen(spielfeld, positionen, position.verschobenUm(1, 0));
@@ -69,8 +53,12 @@ public class Koenig extends Figur {
                 || position.verschobenUm(-1, -1).equals(vergleich);
     }
 
+    @Override
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+        return false;
+    }
+
     private void probiereBewegen(Spielfeld spielfeld, ArrayList<Position> positionen, Position ziel) {
-        System.out.println(spielfeld.feldKontrolliert(this, ziel));
         if (spielfeld.istImSpielfeld(ziel) && !spielfeld.feldKontrolliert(this, ziel)) {
              if (spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() == farbe) {
                  return;

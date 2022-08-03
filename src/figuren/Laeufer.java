@@ -81,6 +81,11 @@ public class Laeufer extends Figur {
         return false;
     }
 
+    @Override
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+        return false;
+    }
+
     private boolean bewegenVerboten(Position ziel) {
         if (spielfeld.istImSpielfeld(ziel)) {
             return spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() == farbe;

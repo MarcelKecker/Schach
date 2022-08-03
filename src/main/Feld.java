@@ -44,9 +44,11 @@ public class Feld extends JButton{
         }
     }
 
-    public void setFigurAufDiesemFeld(Figur figurAufDiesemFeld) {
+    public void setFigurAufDiesemFeld(Figur figurAufDiesemFeld, boolean updateGraphics) {
         this.figurAufDiesemFeld = figurAufDiesemFeld;
-        updateGraphics();
+        if (updateGraphics) {
+            updateGraphics();
+        }
     }
     public ArrayList<Position> getMoeglicheZielPositionen() {
         return figurAufDiesemFeld.getMoeglicheZielPositionen(spielfeld, position);
