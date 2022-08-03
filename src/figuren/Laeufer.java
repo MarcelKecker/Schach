@@ -13,7 +13,7 @@ public class Laeufer extends Figur {
     private Spielfeld spielfeld;
 
     public Laeufer(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         getMoeglicheZielPositionen(spielfeld, new Position(0, 0));
     }
 

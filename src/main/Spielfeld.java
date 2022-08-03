@@ -24,10 +24,10 @@ public class Spielfeld extends JPanel implements ActionListener {
 //            felder[feld(i, 6)].setFigurAufDiesemFeld(new Koenig(Farbe.WEISS));
 //            felder[feld(i, 1)].setFigurAufDiesemFeld(new Bauer(Farbe.SCHWARZ));
 //        }
-        koenigWeiss = new Koenig(Farbe.WEISS);
-        koenigSchwarz = new Koenig(Farbe.SCHWARZ);
-        felder[feld(0, 0)].setFigurAufDiesemFeld(new Springer(Farbe.SCHWARZ), true);
-        felder[feld(1, 0)].setFigurAufDiesemFeld(new Springer(Farbe.WEISS), true);
+        koenigWeiss = new Koenig(Farbe.WEISS, this);
+        koenigSchwarz = new Koenig(Farbe.SCHWARZ, this);
+        felder[feld(0, 0)].setFigurAufDiesemFeld(new Springer(Farbe.SCHWARZ, this), true);
+        felder[feld(1, 0)].setFigurAufDiesemFeld(new Springer(Farbe.WEISS, this), true);
         felder[feld(2, 0)].setFigurAufDiesemFeld(koenigWeiss, true);
         felder[feld(3, 0)].setFigurAufDiesemFeld(koenigSchwarz, true);
         felder[feld(7, 7)].setFigurAufDiesemFeld(new Turm(Farbe.WEISS, this), true);

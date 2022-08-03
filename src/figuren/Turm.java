@@ -13,7 +13,7 @@ public class Turm extends Figur {
     private Spielfeld spielfeld;
 
     public Turm(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         getMoeglicheZielPositionen(spielfeld, new Position(0, 0));
     }
 
@@ -59,7 +59,7 @@ public class Turm extends Figur {
     private void versucheHinzufuegenMoeglicherZuege(Position position, ArrayList<Position> moeglicheZuege, int xRichtung, int yRichtung) {
         for (int i = 0; i < 8; i++) {
             Position ziel = position.verschobenUm(xRichtung * (i + 1), yRichtung * (i + 1));
-            if (bewegenVerboten(position.verschobenUm(xRichtung * (i + 1), yRichtung * (i + 1))) || pruefeFigurTreffen(ziel, xRichtung, yRichtung)) {
+            if (bewegenVerboten(ziel) || pruefeFigurTreffen(ziel, xRichtung, yRichtung)) {
                 break;
             }
             moeglicheZuege.add(ziel);

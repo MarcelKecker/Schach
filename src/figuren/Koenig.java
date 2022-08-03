@@ -13,8 +13,8 @@ import java.util.Objects;
 public class Koenig extends Figur {
     private static final ImageIcon koenigSchwarz = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/KoenigSchwarz.png")));
     private static final ImageIcon koenigWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/KoenigWeiss.png")));
-    public Koenig(Farbe farbe) {
-        super(getRichtigesIcon(farbe), farbe);
+    public Koenig(Farbe farbe, Spielfeld spielfeld) {
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {

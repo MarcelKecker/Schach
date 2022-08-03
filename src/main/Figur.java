@@ -11,7 +11,7 @@ public abstract class Figur{
 
     protected final Farbe farbe;
 
-    public Figur(ImageIcon icon, Farbe farbe) {
+    public Figur(ImageIcon icon, Farbe farbe, Spielfeld spielfeld) {
         this.icon = icon;
         this.farbe = farbe;
     }

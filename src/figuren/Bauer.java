@@ -14,8 +14,8 @@ public class Bauer extends Figur {
     private static final ImageIcon bauerSchwarz = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/BauerSchwarz.png")));
     private static final ImageIcon bauerWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/BauerWeiss.png")));
     private final int startPosition;
-    public Bauer(Farbe farbe) {
-        super(getRichtigesIcon(farbe), farbe);
+    public Bauer(Farbe farbe, Spielfeld spielfeld) {
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         startPosition = switch (farbe) {
             case WEISS -> 6;
             case SCHWARZ -> 1;
