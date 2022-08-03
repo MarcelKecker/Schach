@@ -1,10 +1,7 @@
 package main;
 
 import enums.Farbe;
-import figuren.Koenig;
-import figuren.Laeufer;
-import figuren.Springer;
-import figuren.Turm;
+import figuren.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +32,7 @@ public class Spielfeld extends JPanel implements ActionListener {
         felder[feld(3, 0)].setFigurAufDiesemFeld(koenigSchwarz, true);
         felder[feld(7, 7)].setFigurAufDiesemFeld(new Turm(Farbe.WEISS, this), true);
         felder[feld(1, 7)].setFigurAufDiesemFeld(new Laeufer(Farbe.SCHWARZ, this), true);
+        felder[feld(5, 7)].setFigurAufDiesemFeld(new Dame(Farbe.SCHWARZ, this), true);
 
     }
 

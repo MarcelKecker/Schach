@@ -29,20 +29,13 @@ public class Turm extends Figur {
     public ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position) {
         this.spielfeld = spielfeld;
 
-        System.out.println(spielfeld.istImSchach(Farbe.WEISS));
-
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            if (spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) {
-                positionen.remove(i);
-            }
-            if (setztKoenigSchach(positionen.get(i), position, spielfeld)) {
-
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position, spielfeld)) {
                 positionen.remove(i);
                 i--;
             }
-
         }
         return positionen;
     }

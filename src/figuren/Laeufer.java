@@ -31,6 +31,12 @@ public class Laeufer extends Figur {
 
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
+        for (int i = 0; i < positionen.size(); i++) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position, spielfeld)) {
+                positionen.remove(i);
+                i--;
+            }
+        }
         return positionen;
     }
 
@@ -53,20 +59,19 @@ public class Laeufer extends Figur {
     private void versucheHinzufuegenMoeglicherZuege(Position position, ArrayList<Position> moeglicheZuege, int xRichtung, int yRichtung) {
         for (int i = 0; i < 8; i++) {
             Position ziel = position.verschobenUm(xRichtung * (i + 1), yRichtung * (i + 1));
-            if (bewegenVerboten(position.verschobenUm(xRichtung * (i + 1), yRichtung * (i + 1))) || pruefeGegnerTreffen(ziel, xRichtung, yRichtung)) {
+            if (bewegenVerboten(position.verschobenUm(xRichtung * (i + 1), yRichtung * (i + 1))) || pruefeFigurTreffen(ziel, xRichtung, yRichtung)) {
                 break;
             }
             moeglicheZuege.add(ziel);
         }
     }
-
-    private boolean pruefeGegnerTreffen(Position ziel, int xRichtung, int yRichtung) {
+    private boolean pruefeFigurTreffen(Position ziel, int xRichtung, int yRichtung) {
         if (spielfeld.getFigurBei(ziel.verschobenUm(-xRichtung, -yRichtung)) != null) {
-            return spielfeld.getFigurBei(ziel.verschobenUm(-xRichtung, -yRichtung)).getFarbe() != farbe;
+            return spielfeld.getFigurBei(ziel.verschobenUm(-xRichtung, -yRichtung)) != this;
+        } else {
+            return false;
         }
-        return false;
     }
-
     @Override
     public boolean kontrolliertFeld(Position position, Position vergleich) {
         ArrayList<Position> kontrollierteFelder = new ArrayList<>();
@@ -83,13 +88,17 @@ public class Laeufer extends Figur {
 
     @Override
     public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
-        return false;
+        boolean ausgabe;
+        Figur figurZiel = spielfeld.getFigurBei(ziel);
+        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
+        ausgabe = spielfeld.istImSchach(farbe);
+        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
+        spielfeld.setFigur(ziel, figurZiel);
+
+        return ausgabe;
     }
 
     private boolean bewegenVerboten(Position ziel) {
-        if (spielfeld.istImSpielfeld(ziel)) {
-            return spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() == farbe;
-        }
-        return true;
+        return !spielfeld.istImSpielfeld(ziel);
     }
 }
