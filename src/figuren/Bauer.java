@@ -33,7 +33,6 @@ public class Bauer extends Figur {
     @Override
     public ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position) {
         ArrayList<Position> positionen = new ArrayList<>();
-        // TODO richtige Positionen zurückgeben
         int richtung = switch (farbe) {
             case WEISS -> -1;
             case SCHWARZ -> 1;
@@ -50,6 +49,11 @@ public class Bauer extends Figur {
         probiereSchlagen(spielfeld, positionen, position.verschobenUm(1, richtung));
 
         return positionen;
+    }
+
+    @Override
+    public boolean kontrolliertFeld(Position position,Position vergleich) {
+        return (farbe == Farbe.WEISS && (position.verschobenUm(-1, 1).equals(vergleich) || position.verschobenUm(1, 1).equals(vergleich))) || (farbe == Farbe.SCHWARZ && (position.verschobenUm(-1, -1).equals(vergleich) || position.verschobenUm(1, -1).equals(vergleich)));
     }
 
     private void probiereSchlagen(Spielfeld spielfeld, ArrayList<Position> positionen, Position ziel) {

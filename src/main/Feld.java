@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Feld extends JButton{
 
-    private Position position;
-    private Spielfeld spielfeld;
+    private final Position position;
+    private final Spielfeld spielfeld;
     private boolean istZielPosition;
 
     private Figur figurAufDiesemFeld;

@@ -5,7 +5,7 @@ import enums.Farbe;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
 
-public abstract class Figur {
+public abstract class Figur{
 
     private final ImageIcon icon;
 
@@ -23,4 +23,9 @@ public abstract class Figur {
     public Farbe getFarbe() {
         return farbe;
     }
+    public boolean istGleich(Object obj) {
+        Figur figur = (Figur) obj;
+        return (this.getIcon() == figur.getIcon());
+    }
+    public abstract boolean kontrolliertFeld(Position position, Position vergleich);
 }
