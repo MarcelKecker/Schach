@@ -20,26 +20,35 @@ public class Spielfeld extends JPanel implements ActionListener {
     public Spielfeld() {
         this.setLayout(new GridLayout(SPIELFELD_HOEHE, SPIELFELD_BREITE));
         erstelleFelder();
-//        for (int i = 0; i < SPIELFELD_BREITE; i++) {
-//            felder[feld(i, 6)].setFigurAufDiesemFeld(new Koenig(Farbe.WEISS));
-//            felder[feld(i, 1)].setFigurAufDiesemFeld(new Bauer(Farbe.SCHWARZ));
-//        }
+        for (int i = 0; i < SPIELFELD_BREITE; i++) {
+            felder[feld(i, 6)].setFigurAufDiesemFeld(new Bauer(Farbe.WEISS, this), true);
+            felder[feld(i, 1)].setFigurAufDiesemFeld(new Bauer(Farbe.SCHWARZ, this), true);
+        }
         koenigWeiss = new Koenig(Farbe.WEISS, this);
         koenigSchwarz = new Koenig(Farbe.SCHWARZ, this);
-        felder[feld(0, 0)].setFigurAufDiesemFeld(new Springer(Farbe.SCHWARZ, this), true);
-        felder[feld(1, 0)].setFigurAufDiesemFeld(new Springer(Farbe.WEISS, this), true);
-        felder[feld(2, 0)].setFigurAufDiesemFeld(koenigWeiss, true);
-        felder[feld(3, 0)].setFigurAufDiesemFeld(koenigSchwarz, true);
+        felder[feld(1, 7)].setFigurAufDiesemFeld(new Springer(Farbe.WEISS, this), true);
+        felder[feld(6, 7)].setFigurAufDiesemFeld(new Springer(Farbe.WEISS, this), true);
+        felder[feld(1, 0)].setFigurAufDiesemFeld(new Springer(Farbe.SCHWARZ, this), true);
+        felder[feld(6, 0)].setFigurAufDiesemFeld(new Springer(Farbe.SCHWARZ, this), true);
+        felder[feld(4, 7)].setFigurAufDiesemFeld(koenigWeiss, true);
+        felder[feld(4, 0)].setFigurAufDiesemFeld(koenigSchwarz, true);
+        felder[feld(0, 7)].setFigurAufDiesemFeld(new Turm(Farbe.WEISS, this), true);
         felder[feld(7, 7)].setFigurAufDiesemFeld(new Turm(Farbe.WEISS, this), true);
-        felder[feld(1, 7)].setFigurAufDiesemFeld(new Laeufer(Farbe.SCHWARZ, this), true);
-        felder[feld(5, 7)].setFigurAufDiesemFeld(new Dame(Farbe.SCHWARZ, this), true);
+        felder[feld(0, 0)].setFigurAufDiesemFeld(new Turm(Farbe.SCHWARZ, this), true);
+        felder[feld(7, 0)].setFigurAufDiesemFeld(new Turm(Farbe.SCHWARZ, this), true);
+        felder[feld(2, 7)].setFigurAufDiesemFeld(new Laeufer(Farbe.WEISS, this), true);
+        felder[feld(5, 7)].setFigurAufDiesemFeld(new Laeufer(Farbe.WEISS, this), true);
+        felder[feld(2, 0)].setFigurAufDiesemFeld(new Laeufer(Farbe.SCHWARZ, this), true);
+        felder[feld(5, 0)].setFigurAufDiesemFeld(new Laeufer(Farbe.SCHWARZ, this), true);
+        felder[feld(3, 7)].setFigurAufDiesemFeld(new Dame(Farbe.WEISS, this), true);
+        felder[feld(3, 0)].setFigurAufDiesemFeld(new Dame(Farbe.SCHWARZ, this), true);
 
     }
 
     private void erstelleFelder() {
         felder = new Feld[SPIELFELD_BREITE * SPIELFELD_HOEHE];
         for (int i = 0; i < SPIELFELD_BREITE * SPIELFELD_HOEHE; i++) {
-            felder[i] = (new Feld(position(i), this));
+            felder[i] = (new Feld(position(i)));
             this.add(felder[i]);
             felder[i].addActionListener(this);
         }
@@ -52,13 +61,6 @@ public class Spielfeld extends JPanel implements ActionListener {
             }
         }
         return false;
-    }
-
-    public int getSpielfeldBreite() {
-        return SPIELFELD_BREITE;
-    }
-    public int getSpielfeldHoehe() {
-        return SPIELFELD_HOEHE;
     }
 
     public Position position(int feld) {

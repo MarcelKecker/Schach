@@ -13,11 +13,12 @@ import java.util.Objects;
 public class Springer extends Figur {
     private static final ImageIcon springerSchwarz = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/PferdSchwarz.png")));
     private static final ImageIcon springerWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/PferdWeiss.png")));
-    private Spielfeld spielfeld;
+    private final Spielfeld spielfeld;
 
     public Springer(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe, spielfeld);
-        getMoeglicheZielPositionen(spielfeld, new Position(0, 0));
+        super(getRichtigesIcon(farbe), farbe);
+        this.spielfeld = spielfeld;
+        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -36,23 +37,16 @@ public class Springer extends Figur {
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, 2));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, -2));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, -2));
-
     }
     @Override
-    public ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position) {
-        this.spielfeld = spielfeld;
-
+    public ArrayList<Position> getMoeglicheZielPositionen(Position position) {
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            System.out.println(positionen.size() + " " + i);
-            System.out.println(" position an der stelle i in der liste: " + positionen.get(i).getX() + " " + positionen.get(i).getY());
-            System.out.println("getFigur" + (spielfeld.getFigurBei(positionen.get(i))));
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position, spielfeld)) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
                 positionen.remove(i);
                 i--;
             }
-            System.out.println(positionen.size() + " " + i);
         }
         return positionen;
     }
@@ -77,7 +71,7 @@ public class Springer extends Figur {
     }
 
     @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
         boolean ausgabe;
         Figur figurZiel = spielfeld.getFigurBei(ziel);
         spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);

@@ -11,7 +11,7 @@ public abstract class Figur{
 
     protected final Farbe farbe;
 
-    public Figur(ImageIcon icon, Farbe farbe, Spielfeld spielfeld) {
+    public Figur(ImageIcon icon, Farbe farbe) {
         this.icon = icon;
         this.farbe = farbe;
     }
@@ -19,10 +19,10 @@ public abstract class Figur{
     public ImageIcon getIcon() {
         return icon;
     }
-    public abstract ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position);
+    public abstract ArrayList<Position> getMoeglicheZielPositionen(Position position);
     public Farbe getFarbe() {
         return farbe;
     }
     public abstract boolean kontrolliertFeld(Position position, Position vergleich);
-    public abstract boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld);
+    public abstract boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur);
 }

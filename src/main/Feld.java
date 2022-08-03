@@ -7,14 +7,12 @@ import java.util.ArrayList;
 public class Feld extends JButton{
 
     private final Position position;
-    private final Spielfeld spielfeld;
     private boolean istZielPosition;
 
     private Figur figurAufDiesemFeld;
 
-    Feld(Position position, Spielfeld spielfeld) {
+    Feld(Position position) {
         this.position = position;
-        this.spielfeld = spielfeld;
         this.setPreferredSize(new Dimension(100, 100));
         updateGraphics();
     }
@@ -51,7 +49,7 @@ public class Feld extends JButton{
         }
     }
     public ArrayList<Position> getMoeglicheZielPositionen() {
-        return figurAufDiesemFeld.getMoeglicheZielPositionen(spielfeld, position);
+        return figurAufDiesemFeld.getMoeglicheZielPositionen(position);
     }
     public boolean istFigurAufDiesemFeld() {
         return figurAufDiesemFeld != null;

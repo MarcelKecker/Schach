@@ -13,8 +13,11 @@ import java.util.Objects;
 public class Koenig extends Figur {
     private static final ImageIcon koenigSchwarz = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/KoenigSchwarz.png")));
     private static final ImageIcon koenigWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/KoenigWeiss.png")));
+    private final Spielfeld spielfeld;
     public Koenig(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe, spielfeld);
+        super(getRichtigesIcon(farbe), farbe);
+        this.spielfeld = spielfeld;
+        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -25,45 +28,63 @@ public class Koenig extends Figur {
         }
     }
 
+    private void pruefeMoeglicheZuege(Position position, ArrayList<Position> moeglicheZuege) {
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, 1));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, 0));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, -1));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(0, 1));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(0, -1));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, 1));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, 0));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, -1));
+    }
     @Override
-    public ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position) {
+    public ArrayList<Position> getMoeglicheZielPositionen(Position position) {
+
         ArrayList<Position> positionen = new ArrayList<>();
-
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(1, 1));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(1, 0));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(1, -1));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(0, 1));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(0, -1));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(-1, 1));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(-1, 0));
-        probiereBewegen(spielfeld, positionen, position.verschobenUm(-1, -1));
-
+        pruefeMoeglicheZuege(position, positionen);
+        for (int i = 0; i < positionen.size(); i++) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
+                positionen.remove(i);
+                i--;
+            }
+        }
         return positionen;
     }
 
+    private void versucheHinzufuegenMoeglicherZuege(ArrayList<Position> moeglicheZuege, Position ziel) {
+        if (!bewegenVerboten(ziel)) {
+            moeglicheZuege.add(ziel);
+        }
+    }
     @Override
     public boolean kontrolliertFeld(Position position, Position vergleich) {
-        return position.verschobenUm(1, 1).equals(vergleich)
-                || position.verschobenUm(1, 0).equals(vergleich)
-                || position.verschobenUm(1, -1).equals(vergleich)
-                || position.verschobenUm(0, 1).equals(vergleich)
-                || position.verschobenUm(0, -1).equals(vergleich)
-                || position.verschobenUm(-1, 1).equals(vergleich)
-                || position.verschobenUm(-1, 0).equals(vergleich)
-                || position.verschobenUm(-1, -1).equals(vergleich);
-    }
+        ArrayList<Position> kontrollierteFelder = new ArrayList<>();
 
-    @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+        pruefeMoeglicheZuege(position, kontrollierteFelder);
+
+        for (Position feld : kontrollierteFelder) {
+            if (feld.equals(vergleich)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    private void probiereBewegen(Spielfeld spielfeld, ArrayList<Position> positionen, Position ziel) {
-        if (spielfeld.istImSpielfeld(ziel) && !spielfeld.feldKontrolliert(this, ziel)) {
-             if (spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() == farbe) {
-                 return;
-             }
-            positionen.add(ziel);
-        }
+    @Override
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
+        boolean ausgabe;
+        Figur figurZiel = spielfeld.getFigurBei(ziel);
+        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
+        ausgabe = spielfeld.istImSchach(farbe);
+        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
+        spielfeld.setFigur(ziel, figurZiel);
+
+        return ausgabe;
+    }
+
+    private boolean bewegenVerboten(Position ziel) {
+        return !spielfeld.istImSpielfeld(ziel);
     }
 }
+

@@ -10,11 +10,12 @@ import java.util.Objects;
 public class Turm extends Figur {
     private static final ImageIcon turmSchwarz = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/TurmSchwarz.png")));
     private static final ImageIcon turmWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/TurmWeiss.png")));
-    private Spielfeld spielfeld;
+    private final Spielfeld spielfeld;
 
     public Turm(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe, spielfeld);
-        getMoeglicheZielPositionen(spielfeld, new Position(0, 0));
+        super(getRichtigesIcon(farbe), farbe);
+        this.spielfeld = spielfeld;
+        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -26,13 +27,11 @@ public class Turm extends Figur {
     }
 
     @Override
-    public ArrayList<Position> getMoeglicheZielPositionen(Spielfeld spielfeld, Position position) {
-        this.spielfeld = spielfeld;
-
+    public ArrayList<Position> getMoeglicheZielPositionen(Position position) {
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position, spielfeld)) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
                 positionen.remove(i);
                 i--;
             }
@@ -87,7 +86,7 @@ public class Turm extends Figur {
     }
 
     @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur, Spielfeld spielfeld) {
+    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
         boolean ausgabe;
         Figur figurZiel = spielfeld.getFigurBei(ziel);
         spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
