@@ -16,9 +16,8 @@ public class Springer extends Figur {
     private final Spielfeld spielfeld;
 
     public Springer(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         this.spielfeld = spielfeld;
-        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -30,7 +29,7 @@ public class Springer extends Figur {
     }
     private void pruefeMoeglicheZuege(Position position, ArrayList<Position> moeglicheZuege) {
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-2, 1));
-        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-2, 1));
+        versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-2, -1));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(2, 1));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(2, -1));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, 2));
@@ -43,7 +42,7 @@ public class Springer extends Figur {
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || spielfeld.setztKoenigSchach(positionen.get(i), position, farbe)) {
                 positionen.remove(i);
                 i--;
             }
@@ -68,18 +67,6 @@ public class Springer extends Figur {
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
-        boolean ausgabe;
-        Figur figurZiel = spielfeld.getFigurBei(ziel);
-        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
-        ausgabe = spielfeld.istImSchach(farbe);
-        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
-        spielfeld.setFigur(ziel, figurZiel);
-
-        return ausgabe;
     }
 
     private boolean bewegenVerboten(Position ziel) {

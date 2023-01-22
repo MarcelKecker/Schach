@@ -17,7 +17,7 @@ public class Bauer extends Figur {
     private final Spielfeld spielfeld;
 
     public Bauer(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         this.spielfeld = spielfeld;
         startPosition = switch (farbe) {
             case WEISS -> 6;
@@ -47,13 +47,16 @@ public class Bauer extends Figur {
             }
         }
 
-        moeglicheZuege.add(probiereSchlagen(spielfeld, position.verschobenUm(-1, richtung)));
-        moeglicheZuege.add(probiereSchlagen(spielfeld, position.verschobenUm(1, richtung)));
-        for (int i = 0; i < moeglicheZuege.size(); i++) {
-             if (moeglicheZuege.get(i) == null) {
-                 moeglicheZuege.remove(i);
-             }
+        Position schlagPosition1 = position.verschobenUm(-1, richtung);
+        if (kannSchlagen(spielfeld, schlagPosition1)) {
+            moeglicheZuege.add(schlagPosition1);
         }
+
+        Position schlagPosition2 = position.verschobenUm(1, richtung);
+        if (kannSchlagen(spielfeld, schlagPosition2)) {
+            moeglicheZuege.add(schlagPosition2);
+        }
+
         return moeglicheZuege;
     }
     @Override
@@ -63,10 +66,11 @@ public class Bauer extends Figur {
         for (int i = 0; i < positionen.size(); i++) {
             if (positionen.get(i) == null) {
                 positionen.remove(i);
+                i--;
             }
         }
         for (int i = 0; i < positionen.size(); i++) {
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
+            if (spielfeld.setztKoenigSchach(positionen.get(i), position, farbe)) {
                 positionen.remove(i);
                 i--;
             }
@@ -75,13 +79,14 @@ public class Bauer extends Figur {
     }
     @Override
     public boolean kontrolliertFeld(Position position, Position vergleich) {
-        ArrayList<Position> kontrollierteFelder = pruefeMoeglicheZuege(position);
-
-        for (int i = 0; i < kontrollierteFelder.size(); i++) {
-            if (kontrollierteFelder.get(i) == null) {
-                kontrollierteFelder.remove(i);
+        ArrayList<Position> positionen = pruefeMoeglicheZuege(position);
+        for (int i = 0; i < positionen.size(); i++) {
+            if (positionen.get(i) == null) {
+                positionen.remove(i);
+                i--;
             }
         }
+        ArrayList<Position> kontrollierteFelder = positionen;
 
         for (Position feld : kontrollierteFelder) {
             if (feld != null && feld.equals(vergleich)) {
@@ -91,23 +96,15 @@ public class Bauer extends Figur {
         return false;
     }
 
-    @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
-        boolean ausgabe;
-        Figur figurZiel = spielfeld.getFigurBei(ziel);
-        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
-        ausgabe = spielfeld.istImSchach(farbe);
-        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
-        spielfeld.setFigur(ziel, figurZiel);
-
-        return ausgabe;
-    }
-
     private Position probiereSchlagen(Spielfeld spielfeld, Position ziel) {
         Position position = null;
-        if (spielfeld.istImSpielfeld(ziel) && spielfeld.getFigurBei(ziel) != null) {
+        if (kannSchlagen(spielfeld, ziel)) {
             position = ziel;
         }
         return position;
+    }
+
+    private boolean kannSchlagen(Spielfeld spielfeld, Position ziel) {
+        return spielfeld.istImSpielfeld(ziel) && spielfeld.getFigurBei(ziel) != null && spielfeld.getFigurBei(ziel).getFarbe() != farbe;
     }
 }

@@ -12,10 +12,11 @@ public class Turm extends Figur {
     private static final ImageIcon turmWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/TurmWeiss.png")));
     private final Spielfeld spielfeld;
 
+    private boolean wurdeBewegt;
+
     public Turm(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         this.spielfeld = spielfeld;
-        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -31,7 +32,7 @@ public class Turm extends Figur {
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || spielfeld.setztKoenigSchach(positionen.get(i), position, farbe)) {
                 positionen.remove(i);
                 i--;
             }
@@ -85,19 +86,15 @@ public class Turm extends Figur {
         return false;
     }
 
-    @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
-        boolean ausgabe;
-        Figur figurZiel = spielfeld.getFigurBei(ziel);
-        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
-        ausgabe = spielfeld.istImSchach(farbe);
-        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
-        spielfeld.setFigur(ziel, figurZiel);
-
-        return ausgabe;
-    }
-
     private boolean bewegenVerboten(Position ziel) {
         return !spielfeld.istImSpielfeld(ziel);
+    }
+
+    public void setWurdeBewegt(boolean wurdeBewegt) {
+        this.wurdeBewegt = wurdeBewegt;
+    }
+
+    public boolean wurdeBewegt() {
+        return wurdeBewegt;
     }
 }

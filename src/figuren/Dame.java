@@ -13,9 +13,8 @@ public class Dame extends Figur {
     private final Spielfeld spielfeld;
 
     public Dame(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         this.spielfeld = spielfeld;
-        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -31,7 +30,7 @@ public class Dame extends Figur {
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || spielfeld.setztKoenigSchach(positionen.get(i), position, farbe)) {
                 positionen.remove(i);
                 i--;
             }
@@ -97,18 +96,6 @@ public class Dame extends Figur {
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
-        boolean ausgabe;
-        Figur figurZiel = spielfeld.getFigurBei(ziel);
-        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
-        ausgabe = spielfeld.istImSchach(farbe);
-        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
-        spielfeld.setFigur(ziel, figurZiel);
-
-        return ausgabe;
     }
 
     private boolean bewegenVerboten(Position ziel) {

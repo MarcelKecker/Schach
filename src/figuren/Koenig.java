@@ -1,6 +1,7 @@
 package figuren;
 
 import enums.Farbe;
+import enums.RochadenSeite;
 import main.Figur;
 import main.Frame;
 import main.Position;
@@ -14,10 +15,10 @@ public class Koenig extends Figur {
     private static final ImageIcon koenigSchwarz = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/KoenigSchwarz.png")));
     private static final ImageIcon koenigWeiss = new ImageIcon(Objects.requireNonNull(Frame.class.getResource("/resources/KoenigWeiss.png")));
     private final Spielfeld spielfeld;
+    private boolean wurdeBewegt;
     public Koenig(Farbe farbe, Spielfeld spielfeld) {
-        super(getRichtigesIcon(farbe), farbe);
+        super(getRichtigesIcon(farbe), farbe, spielfeld);
         this.spielfeld = spielfeld;
-        getMoeglicheZielPositionen(new Position(0, 0));
     }
 
     private static ImageIcon getRichtigesIcon(Farbe farbe) {
@@ -28,7 +29,7 @@ public class Koenig extends Figur {
         }
     }
 
-    private void pruefeMoeglicheZuege(Position position, ArrayList<Position> moeglicheZuege) {
+    private void pruefeEinfacheZuege(Position position, ArrayList<Position> moeglicheZuege) {
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, 1));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, 0));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(1, -1));
@@ -38,13 +39,25 @@ public class Koenig extends Figur {
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, 0));
         versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-1, -1));
     }
+
+    private void pruefeMoeglicheZuege(Position position, ArrayList<Position> moeglicheZuege) {
+        pruefeEinfacheZuege(position, moeglicheZuege);
+        if (spielfeld.istImSchach(farbe)) {
+            return;
+        }
+        if (spielfeld.rochadeMoeglich(farbe, RochadenSeite.KURZ)) {
+            versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(2, 0));
+        }
+        if (spielfeld.rochadeMoeglich(farbe, RochadenSeite.LANG)) {
+            versucheHinzufuegenMoeglicherZuege(moeglicheZuege, position.verschobenUm(-2, 0));
+        }
+    }
     @Override
     public ArrayList<Position> getMoeglicheZielPositionen(Position position) {
-
         ArrayList<Position> positionen = new ArrayList<>();
         pruefeMoeglicheZuege(position, positionen);
         for (int i = 0; i < positionen.size(); i++) {
-            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || setztKoenigSchach(positionen.get(i), position)) {
+            if ((spielfeld.getFigurBei(positionen.get(i)) != null && spielfeld.getFigurBei(positionen.get(i)).getFarbe() == farbe) || spielfeld.setztKoenigSchach(positionen.get(i), position, farbe)) {
                 positionen.remove(i);
                 i--;
             }
@@ -61,7 +74,7 @@ public class Koenig extends Figur {
     public boolean kontrolliertFeld(Position position, Position vergleich) {
         ArrayList<Position> kontrollierteFelder = new ArrayList<>();
 
-        pruefeMoeglicheZuege(position, kontrollierteFelder);
+        pruefeEinfacheZuege(position, kontrollierteFelder);
 
         for (Position feld : kontrollierteFelder) {
             if (feld.equals(vergleich)) {
@@ -71,20 +84,16 @@ public class Koenig extends Figur {
         return false;
     }
 
-    @Override
-    public boolean setztKoenigSchach(Position ziel, Position positionBewegendeFigur) {
-        boolean ausgabe;
-        Figur figurZiel = spielfeld.getFigurBei(ziel);
-        spielfeld.bewegeFigur(ziel, positionBewegendeFigur, false);
-        ausgabe = spielfeld.istImSchach(farbe);
-        spielfeld.bewegeFigur(positionBewegendeFigur, ziel, false);
-        spielfeld.setFigur(ziel, figurZiel);
-
-        return ausgabe;
-    }
-
     private boolean bewegenVerboten(Position ziel) {
         return !spielfeld.istImSpielfeld(ziel);
+    }
+
+    public void setWurdeBewegt(boolean wurdeBewegt) {
+        this.wurdeBewegt = wurdeBewegt;
+    }
+
+    public boolean wurdeBewegt() {
+        return wurdeBewegt;
     }
 }
 
